@@ -4,14 +4,14 @@
 const size_t SIZE = 5;
 
 template <typename T>
-void print(T arr[], size_t size)
+void print(T arr[], size_t size) // печать всего массива
 {
 	for (size_t i = 0; i < size; ++i)
 		std::cout << arr[i] << " ";
 	std::cout << "\n";
 }
 
-std::string to_binary(int number, int bits_count)
+std::string to_binary(int number, int bits_count) // перевод целого числа в двоичную систему (представимо в виде строки)
 {
 	std::string result = "";
 	while (number > 0)
@@ -21,7 +21,7 @@ std::string to_binary(int number, int bits_count)
 		bits_count--;
 	}
 
-	while (bits_count > 0)
+	while (bits_count > 0) // дописываются дополнительные разряды, чтобы все числа массива имели одинаковую длину
 	{
 		result = "0" + result;
 		bits_count--;
@@ -29,7 +29,7 @@ std::string to_binary(int number, int bits_count)
 	return result;
 }
 
-int to_integer(std::string binary_num)
+int to_integer(std::string binary_num) // перевод из двоичной системы в десятичную
 {
 	size_t size = binary_num.length();
 	int result = 0;
@@ -38,7 +38,7 @@ int to_integer(std::string binary_num)
 	return result;
 }
 
-int max_bits(int arr[], size_t size)
+int max_bits(int arr[], size_t size) // подсчёт максимального количества битов для выравнивания чисел в массиве по длине
 {
 	int maxm = arr[0];
 	for (size_t i = 0; i < size; ++i)
@@ -47,7 +47,7 @@ int max_bits(int arr[], size_t size)
 	return to_binary(maxm, 0).length();
 }
 
-std::string* arr_to_bin(int arr[], size_t size, int bits_count)
+std::string* arr_to_bin(int arr[], size_t size, int bits_count) // перевод массива десятичных чисел в массив бинарных чисел
 {
 	std::string* result = new std::string[size];
 	for (size_t i = 0; i < size; ++i)
@@ -55,7 +55,7 @@ std::string* arr_to_bin(int arr[], size_t size, int bits_count)
 	return result;
 }
 
-int* arr_to_int(std::string arr[], size_t size)
+int* arr_to_int(std::string arr[], size_t size) // обратный перевод
 {
 	int* result = new int[size];
 	for (size_t i = 0; i < size; ++i)
@@ -63,24 +63,28 @@ int* arr_to_int(std::string arr[], size_t size)
 	return result;
 }
 
-void radix_sort_rec(std::string* array, size_t start, size_t end, int digit)
+void radix_sort_rec(std::string* array, size_t start, size_t end, int digit) // поразрядная сортировка
 {
-	if (start < end && digit < array[0].length())
+	if (start < end && digit < array[0].length()) // идём до тех пор, пока начало массива != конец 
+		// и пока мы не дошли до последнего разряда
 	{
-		size_t i = start, j = end;
-		while (i <= j)
+		size_t i = start, j = end; // идём по выделенной области [start;end) с двух концов (с левой и правой стороны)
+		while (i <= j) // будем менять индексы, пока они не пересекутся (когда i > j)
 		{
-			while (i <= end && array[i][digit] == '0')
+			while (i <= end && array[i][digit] == '0') // двигаемся слева, пока не дошли до конца либо текущий разряд != 0
 				++i;
-			while (j >= start && array[j][digit] == '1')
+			while (j >= start && array[j][digit] == '1') // двигаемся справа, пока не дошли до начала либо текущий разряд != 1
 				--j;
 			if (i <= j)
 			{
-				std::swap(array[i], array[j]);
+				std::swap(array[i], array[j]); // производим обмен таким образом, что в левой части находятся числа с текущим разрядом == 0,
+				// а в правой части - с текущим разрядом == 1
 				++i; --j;
 			}
 		}
-		radix_sort_rec(array, start, j, digit + 1);
+		// рекурсия вызывается для разных частей массива, 
+		// при этом сортировка идёт по следующему разряду (и так до самого старшего)
+		radix_sort_rec(array, start, j, digit + 1); 
 		radix_sort_rec(array, i, end, digit + 1);
 	}
 }
