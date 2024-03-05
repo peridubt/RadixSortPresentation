@@ -89,7 +89,7 @@ void radix_sort_rec(std::string* array, size_t start, size_t end, int digit) // 
 	}
 }
 
-void radix_sort(int*& arr, size_t size)
+void radix_sort(int*& arr, size_t size) // функция-обёртка для самой сортировки
 {
 	int bits_count = max_bits(arr, size);
 	std::string* bin_arr = arr_to_bin(arr, size, bits_count);
